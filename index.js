@@ -34,9 +34,8 @@ async function textToSpeech(text, storyId = null) {
     }
 }
 
-// Example function to update the story audio in the database
-async function updateStoryAudio(storyId, audioBytes) {
-    // Implement your database update logic here
-}
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
 
-export default textToSpeech;
+module.exports = app;
