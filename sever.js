@@ -33,9 +33,4 @@ async function textToSpeech(text, storyId = null) {
         return null;
     }
 }
-
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
-module.exports = app;
+export default textToSpeech;
