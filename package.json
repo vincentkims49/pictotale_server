@@ -2,6 +2,7 @@
   "name": "text-to-speech-server",
   "version": "1.0.0",
   "main": "api/text-to-speech.js",
+  "type": "module",
   "scripts": {
     "start": "vercel dev"
   },

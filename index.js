@@ -1,24 +1,24 @@
 import express from 'express';
-import { json } from 'body-parser';
-import textToSpeech from './sever';
+import textToSpeech from './server.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.use(json());
+// Use the built-in express middleware for parsing JSON
+app.use(express.json());
 
-app.post('/text-to-speech', async (req, res) => {
+app.post('/api', async (req, res) => {
     const { text, storyId } = req.body;
     try {
         const audioBytes = await textToSpeech(text, storyId);
         if (audioBytes) {
             res.set('Content-Type', 'audio/mpeg');
-            res.send(audioBytes);
+            res.send(Buffer.from(audioBytes));  // Convert the Uint8Array to Buffer
         } else {
             res.status(500).send('Failed to generate speech');
         }
     } catch (error) {
-        console.error('Error in /text-to-speech route:', error);
+        console.error('Error in /api route:', error);
         res.status(500).send('Internal Server Error');
     }
 });
