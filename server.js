@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const Constants = {
-    voiceid: 'rCuVrCHOUMY3OwyJBJym', // Replace with your actual voice ID
-    elevenLabsKey: 'sk_7d43cc72cea456c347e57929812026ff8c79b29ddbc4d800' // Replace with your actual API key
+    voiceid: process.env.VOICE_ID,
+    elevenLabsKey: process.env.ELEVEN_LABS_KEY
 };
 
 async function textToSpeech(text) {
@@ -21,15 +21,15 @@ async function textToSpeech(text) {
         const response = await axios.post(url, body, { headers: headers, responseType: 'arraybuffer' });
         if (response.status === 200) {
             const bytes = response.data;
-            console.log(`Received audio bytes length: ${bytes.byteLength}`); // Log the length of the received audio bytes
+            console.log(`Received audio bytes length: ${bytes.byteLength}`);
             return bytes;
         } else {
-            console.error('Failed to generate speech:', response.data);
+            console.error('Failed to generate speech:', response.data.toString());
             return null;
         }
     } catch (error) {
-        console.error('Error in text-to-speech:', error);
-        return null;
+        console.error('Error in text-to-speech:', error.response ? error.response.data.toString() : error.message);
+        throw error; // Propagate the error to be handled in the main route
     }
 }
 

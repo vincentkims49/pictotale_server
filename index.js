@@ -1,14 +1,13 @@
 import express from 'express';
-import textToSpeech from './server.js'; // Ensure this path is correct
+import textToSpeech from './server.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use environment variable for port
 
-// Use built-in express middleware to parse JSON
 app.use(express.json());
 
 app.post('/api', async (req, res) => {
-    const { text } = req.body; // Remove storyId
+    const { text } = req.body;
 
     if (!text) {
         return res.status(400).send('Text is required');
@@ -24,12 +23,12 @@ app.post('/api', async (req, res) => {
         }
     } catch (error) {
         console.error('Error in /api route:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
 
 export default app;
