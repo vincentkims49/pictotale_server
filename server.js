@@ -1,48 +1,47 @@
-import axios from 'axios';
+import { ElevenLabsClient } from 'elevenlabs';
+import { createWriteStream } from 'fs';
+import { v4 as uuid } from 'uuid';
+import * as dotenv from 'dotenv';
 
-const Constants = {
-    voiceid: process.env.VOICE_ID,
-    elevenLabsKey: process.env.ELEVEN_LABS_KEY
-};
+dotenv.config();
 
-async function textToSpeech(text) {
-    console.log('textToSpeech function called');
-    console.log('VOICE_ID:', Constants.voiceid);
-    console.log('ELEVEN_LABS_KEY (first 4 chars):', Constants.elevenLabsKey?.substring(0, 4));
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
-    const url = `https://api.elevenlabs.io/v1/text-to-speech/${Constants.voiceid}`;
-    const headers = {
-        'xi-api-key': Constants.elevenLabsKey,
-        'Content-Type': 'application/json',
-    };
-    const body = {
-        text: text,
-        model_id: 'eleven_monolingual_v1',
-        voice_settings: { stability: 0.5, similarity_boost: 0.5 },
-    };
+const client = new ElevenLabsClient({
+  apiKey: ELEVENLABS_API_KEY,
+});
 
+const textToSpeech = async (text) => {
+  return new Promise(async (resolve, reject) => {
     try {
-        console.log('Sending request to ElevenLabs API...');
-        const response = await axios.post(url, body, { headers: headers, responseType: 'arraybuffer' });
-        console.log('Received response from ElevenLabs API');
-        console.log('Response status:', response.status);
+      console.log('textToSpeech function called');
+      console.log('Using voice:', process.env.VOICE_ID || 'Rachel');
+      console.log('Using model:', 'eleven_turbo_v2_5');
+      console.log('ELEVENLABS_API_KEY (first 4 chars):', ELEVENLABS_API_KEY?.substring(0, 4));
 
-        if (response.status === 200) {
-            const bytes = response.data;
-            console.log(`Received audio bytes length: ${bytes.byteLength}`);
-            return bytes;
-        } else {
-            console.error('Failed to generate speech:', response.data.toString());
-            return null;
-        }
+      const audio = await client.generate({
+        voice: process.env.VOICE_ID || 'Rachel',
+        model_id: 'eleven_turbo_v2_5',
+        text,
+      });
+
+      const fileName = `${uuid()}.mp3`;
+      const fileStream = createWriteStream(fileName);
+
+      audio.pipe(fileStream);
+      fileStream.on('finish', () => {
+        console.log(`Audio file created: ${fileName}`);
+        resolve(fileName);
+      });
+      fileStream.on('error', (error) => {
+        console.error('Error writing to file:', error);
+        reject(error);
+      });
     } catch (error) {
-        console.error('Error in text-to-speech:', error.message);
-        if (error.response) {
-            console.error('Error response status:', error.response.status);
-            console.error('Error response data:', error.response.data.toString());
-        }
-        throw error;
+      console.error('Error in text-to-speech:', error.message);
+      reject(error);
     }
-}
+  });
+};
 
 export default textToSpeech;

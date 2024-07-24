@@ -1,5 +1,8 @@
 import express from 'express';
 import textToSpeech from './server.js';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Default to 3000 if PORT is not set
