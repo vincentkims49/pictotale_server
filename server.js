@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const Constants = {
-    voiceid: process.env.VOICE_ID,
-    elevenLabsKey: process.env.ELEVEN_LABS_KEY
+    voiceid: "rCuVrCHOUMY3OwyJBJym",
+    elevenLabsKey: "sk_7d43cc72cea456c347e57929812026ff8c79b29ddbc4d800"
 };
 
 async function textToSpeech(text) {

@@ -2,7 +2,7 @@ import express from 'express';
 import textToSpeech from './server.js';
 
 const app = express();
-const port = process.env.PORT || 3000; // Use environment variable for port
+const port = 3000; // Use environment variable for port
 
 app.use(express.json());
 

@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
@@ -10,15 +10,11 @@
     {
       "src": "/api",
       "methods": ["POST"],
-      "dest": "/api"
+      "dest": "index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.js"
+      "dest": "index.js"
     }
-  ],
-  "env": {
-    "VOICE_ID": "rCuVrCHOUMY3OwyJBJym",
-    "ELEVEN_LABS_KEY": "sk_7d43cc72cea456c347e57929812026ff8c79b29ddbc4d800"
-  }
+  ]
 }
