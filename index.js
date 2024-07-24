@@ -2,6 +2,7 @@ import express from 'express';
 import textToSpeech from './server.js';
 
 const app = express();
+const PORT = process.env.PORT || 3000; // Default to 3000 if PORT is not set
 
 app.use(express.json());
 
@@ -30,4 +31,6 @@ app.post('/api', async (req, res) => {
     }
 });
 
-export default app;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
